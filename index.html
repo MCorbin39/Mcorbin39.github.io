@@ -6,6 +6,7 @@
   <meta name="description" content="View and manage Indianapolis Super Smash Bros. Melee Slippi online player rankings and points." />
   <title>Indianapolis Slippi Rankings</title>
   <link rel="stylesheet" href="styles.css" />
+
   <style>
     body {
       font-size: 16px;
@@ -90,6 +91,7 @@
 
 <body>
   <main class="page">
+
     <header class="top-controls">
       <button class="action-button" id="addUserBtn" type="button">
         Add User
@@ -122,6 +124,7 @@
               <th scope="col">Points</th>
             </tr>
           </thead>
+
           <tbody id="rankingsList">
             <tr>
               <td colspan="3">No players have been added yet.</td>
@@ -133,16 +136,18 @@
 
     <section aria-labelledby="aboutTitle">
       <h2 id="aboutTitle">About the Rankings</h2>
+
       <p>
         This page tracks the Indianapolis Super Smash Bros. Melee community's
         online Slippi rankings. Add players and their points to maintain the
         list. Rankings update automatically when player information changes.
       </p>
 
+      <!-- Super Smash Bros. Melee image -->
       <img
         class="rankings-image"
-        src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80"
-        alt="Gaming setup with monitors and equipment"
+        src="https://www.ssbwiki.com/images/8/8c/Melee_Match_Start.jpg"
+        alt="A match starting in Super Smash Bros. Melee"
         loading="lazy"
       />
     </section>
@@ -151,8 +156,10 @@
       <a href="index.html" aria-current="page">Rankings</a>
       <a href="about.html">About</a>
     </nav>
+
   </main>
 
+  <!-- Add User Modal -->
   <div class="modal-overlay" id="addModal">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="addTitle">
       <h2 id="addTitle">Add User</h2>
@@ -180,6 +187,7 @@
         <button class="modal-button" id="confirmAddBtn" type="button">
           Add User
         </button>
+
         <button class="modal-button cancel-button" id="cancelAddBtn" type="button">
           Cancel
         </button>
@@ -187,6 +195,7 @@
     </div>
   </div>
 
+  <!-- Delete User Modal -->
   <div class="modal-overlay" id="deleteModal">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="deleteTitle">
       <h2 id="deleteTitle">Delete User</h2>
@@ -205,6 +214,7 @@
         <button class="modal-button" id="checkDeleteBtn" type="button">
           Continue
         </button>
+
         <button class="modal-button cancel-button" id="cancelDeleteBtn" type="button">
           Cancel
         </button>
@@ -212,6 +222,7 @@
     </div>
   </div>
 
+  <!-- Confirm Delete Modal -->
   <div class="modal-overlay" id="confirmDeleteModal">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirmDeleteTitle">
       <h2 id="confirmDeleteTitle">Confirm Delete</h2>
@@ -224,6 +235,7 @@
         <button class="modal-button" id="yesDeleteBtn" type="button">
           Yes
         </button>
+
         <button class="modal-button cancel-button" id="noDeleteBtn" type="button">
           No
         </button>
@@ -236,7 +248,8 @@
 
     const addModal = document.getElementById("addModal");
     const deleteModal = document.getElementById("deleteModal");
-    const confirmDeleteModal = document.getElementById("confirmDeleteModal");
+    const confirmDeleteModal =
+      document.getElementById("confirmDeleteModal");
 
     const addTag = document.getElementById("addTag");
     const addPoints = document.getElementById("addPoints");
@@ -249,6 +262,7 @@
 
     let users = [];
 
+    // Load saved rankings from this browser.
     try {
       const savedUsers = JSON.parse(
         localStorage.getItem("indianapolisSlippiUsers") || "[]"
@@ -279,6 +293,7 @@
       }
     }
 
+    // Display players from highest to lowest points.
     function renderRankings() {
       rankingsList.replaceChildren();
 
@@ -287,8 +302,10 @@
       if (users.length === 0) {
         const row = document.createElement("tr");
         const cell = document.createElement("td");
+
         cell.colSpan = 3;
         cell.textContent = "No players have been added yet.";
+
         row.appendChild(cell);
         rankingsList.appendChild(row);
       } else {
@@ -312,18 +329,22 @@
       saveUsers();
     }
 
+    // Open Add User modal.
     document.getElementById("addUserBtn").addEventListener("click", () => {
       addTag.value = "";
       addPoints.value = "";
       addError.textContent = "";
+
       addModal.classList.add("active");
       addTag.focus();
     });
 
+    // Cancel adding a user.
     document.getElementById("cancelAddBtn").addEventListener("click", () => {
       addModal.classList.remove("active");
     });
 
+    // Add a player to the rankings.
     document.getElementById("confirmAddBtn").addEventListener("click", () => {
       const tag = addTag.value.trim();
       const points = Number(addPoints.value);
@@ -341,7 +362,8 @@
         !Number.isSafeInteger(points) ||
         points < 0
       ) {
-        addError.textContent = "Please enter a valid non-negative whole number of points.";
+        addError.textContent =
+          "Please enter a valid non-negative whole number of points.";
         addPoints.focus();
         return;
       }
@@ -357,21 +379,26 @@
       }
 
       users.push({ tag, points });
+
       renderRankings();
       addModal.classList.remove("active");
     });
 
+    // Open Delete User modal.
     document.getElementById("deleteUserBtn").addEventListener("click", () => {
       deleteTag.value = "";
       deleteError.textContent = "";
+
       deleteModal.classList.add("active");
       deleteTag.focus();
     });
 
+    // Cancel deleting a user.
     document.getElementById("cancelDeleteBtn").addEventListener("click", () => {
       deleteModal.classList.remove("active");
     });
 
+    // Find the player before asking for delete confirmation.
     document.getElementById("checkDeleteBtn").addEventListener("click", () => {
       const tag = deleteTag.value.trim();
 
@@ -398,9 +425,11 @@
 
       deleteModal.classList.remove("active");
       confirmDeleteModal.classList.add("active");
+
       document.getElementById("yesDeleteBtn").focus();
     });
 
+    // Confirm deleting a player.
     document.getElementById("yesDeleteBtn").addEventListener("click", () => {
       if (!pendingDeleteTag) return;
 
@@ -409,15 +438,18 @@
       );
 
       pendingDeleteTag = "";
+
       renderRankings();
       confirmDeleteModal.classList.remove("active");
     });
 
+    // Cancel deletion.
     document.getElementById("noDeleteBtn").addEventListener("click", () => {
       pendingDeleteTag = "";
       confirmDeleteModal.classList.remove("active");
     });
 
+    // Close modals when clicking outside the dialog.
     [addModal, deleteModal, confirmDeleteModal].forEach(modal => {
       modal.addEventListener("click", event => {
         if (event.target === modal) {
@@ -430,6 +462,7 @@
       });
     });
 
+    // Pressing Enter submits the relevant form action.
     [addTag, addPoints].forEach(input => {
       input.addEventListener("keydown", event => {
         if (event.key === "Enter") {
@@ -444,6 +477,7 @@
       }
     });
 
+    // Render saved rankings when the page loads.
     renderRankings();
   </script>
 </body>
