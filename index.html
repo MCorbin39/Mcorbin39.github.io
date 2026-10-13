@@ -1,19 +1,98 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="View and manage Indianapolis Super Smash Bros. Melee Slippi online player rankings and points." />
   <title>Indianapolis Slippi Rankings</title>
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .site-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .rankings-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .rankings-table th,
+    .rankings-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+      font-size: 1rem;
+    }
+
+    .rankings-table thead {
+      background: #f0f0f0;
+    }
+
+    .rankings-table tbody tr:nth-child(even) {
+      background: #f8f8f8;
+    }
+
+    .rankings-table tbody tr:hover {
+      background: #eaeaea;
+    }
+
+    .page-navigation {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .page-navigation a {
+      font-size: 1rem;
+      color: #174ea6;
+    }
+
+    .rankings-image {
+      display: block;
+      width: 100%;
+      max-width: 720px;
+      height: auto;
+      margin: 1.5rem auto;
+      border-radius: 8px;
+    }
+
+    .error-message {
+      color: #b00020;
+    }
+
+    button,
+    input {
+      font-size: 1rem;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .modal-overlay {
+      display: none;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+  </style>
 </head>
 
 <body>
   <main class="page">
-
-    <div class="top-controls">
-      <button class="action-button" id="addUserBtn">
-        Add User Here
+    <header class="top-controls">
+      <button class="action-button" id="addUserBtn" type="button">
+        Add User
       </button>
 
       <div class="site-title">
@@ -21,33 +100,62 @@
         Melee's Online Rankings
       </div>
 
-      <button class="action-button" id="deleteUserBtn">
-        Delete User Here
+      <button class="action-button" id="deleteUserBtn" type="button">
+        Delete User
       </button>
-    </div>
+    </header>
 
-    <section class="rankings-container">
+    <section class="rankings-container" aria-labelledby="rankingsTitle">
       <div class="rankings-header">
-        <span class="collapse-icon">−</span>
-        <strong>Indianapolis Slippi Rankings</strong>
+        <span class="collapse-icon" aria-hidden="true">−</span>
+        <h1 id="rankingsTitle">Indianapolis Slippi Rankings</h1>
       </div>
 
-      <div class="rankings-column-labels">
-        <div></div>
-        <div>Tag</div>
-        <div>Points</div>
-      </div>
+      <p>Players are ranked by their total online Slippi points.</p>
 
-      <div id="rankingsList">
-
+      <div class="table-wrapper">
+        <table class="rankings-table">
+          <thead>
+            <tr>
+              <th scope="col">Rank</th>
+              <th scope="col">Tag</th>
+              <th scope="col">Points</th>
+            </tr>
+          </thead>
+          <tbody id="rankingsList">
+            <tr>
+              <td colspan="3">No players have been added yet.</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
+    <section aria-labelledby="aboutTitle">
+      <h2 id="aboutTitle">About the Rankings</h2>
+      <p>
+        This page tracks the Indianapolis Super Smash Bros. Melee community's
+        online Slippi rankings. Add players and their points to maintain the
+        list. Rankings update automatically when player information changes.
+      </p>
+
+      <img
+        class="rankings-image"
+        src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80"
+        alt="Gaming setup with monitors and equipment"
+        loading="lazy"
+      />
+    </section>
+
+    <nav class="page-navigation" aria-label="Main navigation">
+      <a href="index.html" aria-current="page">Rankings</a>
+      <a href="about.html">About</a>
+    </nav>
   </main>
 
   <div class="modal-overlay" id="addModal">
-    <div class="modal">
-      <h2>Add User</h2>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="addTitle">
+      <h2 id="addTitle">Add User</h2>
 
       <label for="addTag">Tag</label>
       <input
@@ -57,7 +165,7 @@
         maxlength="30"
       />
 
-      <label for="addPoints">Total # of online Slippi points</label>
+      <label for="addPoints">Total number of online Slippi points</label>
       <input
         type="number"
         id="addPoints"
@@ -66,14 +174,13 @@
         step="1"
       />
 
-      <p class="error-message" id="addError"></p>
+      <p class="error-message" id="addError" role="alert"></p>
 
       <div class="modal-buttons">
-        <button class="modal-button" id="confirmAddBtn">
+        <button class="modal-button" id="confirmAddBtn" type="button">
           Add User
         </button>
-
-        <button class="modal-button cancel-button" id="cancelAddBtn">
+        <button class="modal-button cancel-button" id="cancelAddBtn" type="button">
           Cancel
         </button>
       </div>
@@ -81,8 +188,8 @@
   </div>
 
   <div class="modal-overlay" id="deleteModal">
-    <div class="modal">
-      <h2>Delete User</h2>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="deleteTitle">
+      <h2 id="deleteTitle">Delete User</h2>
 
       <label for="deleteTag">Tag</label>
       <input
@@ -92,14 +199,13 @@
         maxlength="30"
       />
 
-      <p class="error-message" id="deleteError"></p>
+      <p class="error-message" id="deleteError" role="alert"></p>
 
       <div class="modal-buttons">
-        <button class="modal-button" id="checkDeleteBtn">
+        <button class="modal-button" id="checkDeleteBtn" type="button">
           Continue
         </button>
-
-        <button class="modal-button cancel-button" id="cancelDeleteBtn">
+        <button class="modal-button cancel-button" id="cancelDeleteBtn" type="button">
           Cancel
         </button>
       </div>
@@ -107,19 +213,18 @@
   </div>
 
   <div class="modal-overlay" id="confirmDeleteModal">
-    <div class="modal">
-      <h2>Confirm Delete</h2>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirmDeleteTitle">
+      <h2 id="confirmDeleteTitle">Confirm Delete</h2>
 
       <p class="confirmation-text">
         Really delete user <strong id="userToDelete"></strong>?
       </p>
 
       <div class="modal-buttons">
-        <button class="modal-button" id="yesDeleteBtn">
+        <button class="modal-button" id="yesDeleteBtn" type="button">
           Yes
         </button>
-
-        <button class="modal-button cancel-button" id="noDeleteBtn">
+        <button class="modal-button cancel-button" id="noDeleteBtn" type="button">
           No
         </button>
       </div>
@@ -142,50 +247,77 @@
 
     const userToDelete = document.getElementById("userToDelete");
 
-    let users = JSON.parse(localStorage.getItem("indianapolisSlippiUsers")) || [];
+    let users = [];
+
+    try {
+      const savedUsers = JSON.parse(
+        localStorage.getItem("indianapolisSlippiUsers") || "[]"
+      );
+
+      if (Array.isArray(savedUsers)) {
+        users = savedUsers.filter(user =>
+          user &&
+          typeof user.tag === "string" &&
+          Number.isInteger(user.points) &&
+          user.points >= 0
+        );
+      }
+    } catch (error) {
+      users = [];
+    }
 
     let pendingDeleteTag = "";
 
+    function saveUsers() {
+      try {
+        localStorage.setItem(
+          "indianapolisSlippiUsers",
+          JSON.stringify(users)
+        );
+      } catch (error) {
+        console.error("Unable to save rankings:", error);
+      }
+    }
+
     function renderRankings() {
-      rankingsList.innerHTML = "";
+      rankingsList.replaceChildren();
 
       users.sort((a, b) => b.points - a.points);
 
-      users.forEach((user, index) => {
-        const row = document.createElement("div");
-        row.className = "ranking-row";
-
-        row.innerHTML = `
-          <div class="rank">#${index + 1}</div>
-          <div class="player-name">${escapeHTML(user.tag)}</div>
-          <div class="points">${user.points}</div>
-        `;
-
+      if (users.length === 0) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        cell.colSpan = 3;
+        cell.textContent = "No players have been added yet.";
+        row.appendChild(cell);
         rankingsList.appendChild(row);
-      });
+      } else {
+        users.forEach((user, index) => {
+          const row = document.createElement("tr");
 
-      localStorage.setItem(
-        "indianapolisSlippiUsers",
-        JSON.stringify(users)
-      );
-    }
+          const rankCell = document.createElement("td");
+          rankCell.textContent = `#${index + 1}`;
 
-    function escapeHTML(text) {
-      const div = document.createElement("div");
-      div.textContent = text;
-      return div.innerHTML;
+          const tagCell = document.createElement("td");
+          tagCell.textContent = user.tag;
+
+          const pointsCell = document.createElement("td");
+          pointsCell.textContent = user.points.toLocaleString();
+
+          row.append(rankCell, tagCell, pointsCell);
+          rankingsList.appendChild(row);
+        });
+      }
+
+      saveUsers();
     }
 
     document.getElementById("addUserBtn").addEventListener("click", () => {
       addTag.value = "";
       addPoints.value = "";
       addError.textContent = "";
-
       addModal.classList.add("active");
-
-      setTimeout(() => {
-        addTag.focus();
-      }, 100);
+      addTag.focus();
     });
 
     document.getElementById("cancelAddBtn").addEventListener("click", () => {
@@ -198,14 +330,19 @@
 
       addError.textContent = "";
 
-      if (tag === "") {
+      if (!tag) {
         addError.textContent = "Please enter a Tag.";
+        addTag.focus();
         return;
       }
 
-      if (addPoints.value === "" || !Number.isInteger(points) || points < 0) {
-        addError.textContent =
-          "Please enter a valid number of points.";
+      if (
+        addPoints.value.trim() === "" ||
+        !Number.isSafeInteger(points) ||
+        points < 0
+      ) {
+        addError.textContent = "Please enter a valid non-negative whole number of points.";
+        addPoints.focus();
         return;
       }
 
@@ -214,30 +351,21 @@
       );
 
       if (existingUser) {
-        addError.textContent =
-          "That Tag is already in the rankings.";
+        addError.textContent = "That Tag is already in the rankings.";
+        addTag.focus();
         return;
       }
 
-      users.push({
-        tag: tag,
-        points: points
-      });
-
+      users.push({ tag, points });
       renderRankings();
-
       addModal.classList.remove("active");
     });
 
     document.getElementById("deleteUserBtn").addEventListener("click", () => {
       deleteTag.value = "";
       deleteError.textContent = "";
-
       deleteModal.classList.add("active");
-
-      setTimeout(() => {
-        deleteTag.focus();
-      }, 100);
+      deleteTag.focus();
     });
 
     document.getElementById("cancelDeleteBtn").addEventListener("click", () => {
@@ -249,8 +377,9 @@
 
       deleteError.textContent = "";
 
-      if (tag === "") {
+      if (!tag) {
         deleteError.textContent = "Please enter a Tag.";
+        deleteTag.focus();
         return;
       }
 
@@ -260,32 +389,32 @@
 
       if (!existingUser) {
         deleteError.textContent = "Tag not found.";
+        deleteTag.focus();
         return;
       }
 
       pendingDeleteTag = existingUser.tag;
-
       userToDelete.textContent = existingUser.tag;
 
       deleteModal.classList.remove("active");
       confirmDeleteModal.classList.add("active");
+      document.getElementById("yesDeleteBtn").focus();
     });
 
     document.getElementById("yesDeleteBtn").addEventListener("click", () => {
+      if (!pendingDeleteTag) return;
+
       users = users.filter(
         user => user.tag.toLowerCase() !== pendingDeleteTag.toLowerCase()
       );
 
       pendingDeleteTag = "";
-
       renderRankings();
-
       confirmDeleteModal.classList.remove("active");
     });
 
     document.getElementById("noDeleteBtn").addEventListener("click", () => {
       pendingDeleteTag = "";
-
       confirmDeleteModal.classList.remove("active");
     });
 
@@ -293,6 +422,10 @@
       modal.addEventListener("click", event => {
         if (event.target === modal) {
           modal.classList.remove("active");
+
+          if (modal === confirmDeleteModal) {
+            pendingDeleteTag = "";
+          }
         }
       });
     });
@@ -310,8 +443,8 @@
         document.getElementById("checkDeleteBtn").click();
       }
     });
-    
+
+    renderRankings();
   </script>
 </body>
 </html>
-```
